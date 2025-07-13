@@ -1,0 +1,31 @@
+// Author: Ishrat Arshad
+// Project 2: Hash Table with AVL Tree Chaining
+// Date: 06/27/2025
+// File: report.txt
+// Description: answering questions
+
+Description of the AVL Tree:
+In AVLTree.h and AVLTree.cpp, I implemented a self-balancing binary search tree (AVL Tree) where each node stores a std::string key and value. This structure automatically keeps itself balanced using rotations after insertions and deletions. I implemented all four rotations (LL, RR, LR, RL) and used the balance factor where the difference in height between left and right children to decide when to rebalance. The tree supports inserting new key-value pairs, searching for a key, and deleting nodes while maintaining height balance. These operations are all recursive and update node heights as they return. Each AVL tree node is part of a bucket in the hash table and allows fast O(log n) operations regardless of the number of elements in that bucket.
+
+2. Explanation of Integration with the Hash Table
+In HashTable.h and HashTable.cpp, I built a fixed-size array of AVLTree pointers. The hash table uses std::hash<std::string> to compute an index for each key, and each index in the array points to an AVL tree (bucket). This structure lets me handle collisions efficiently where instead of chaining with a linked list, all key-value pairs in the same bucket are stored in a balanced AVL tree. When insert, search, or remove is called on the hash table, it first hashes the key to get the bucket index, and then calls the corresponding AVL tree method. This design means the hash table distributes keys well while the AVL trees make sure that collisions don’t degrade performance, keeping every operation balanced and efficient.
+
+3. Time and Space Complexity Analysis
+
+    AVLTree.h / AVLTree.cpp
+    - insert: Time is O(log n) because it follows the binary tree structure and performs at most one rotation per recursive call. Space is O(log n) due to the recursive call stack and O(n) overall to store all nodes.
+    - remove: Time is O(log n) since it searches, deletes, and rebalances. Space is O(log n) recursive depth, and O(n) total for node storage.
+    - search: Time is O(log n) as it traverses a balanced tree. Space is O(1) since no extra memory is used.
+    - rotateLeft and rotateRight: Time is O(1) because each only involves changing a few pointers. Space is O(1) too.
+
+    HashTable.h / HashTable.cpp:
+    - insert: Time is O(log k), where k is an element in the selected AVL tree, since it hashes then inserts into AVL. Space is O(1) per insert, with total space O(n) for all entries.
+    - search: Time is O(log k) because it hashes and searches the AVL tree. Space is O(1).
+    - remove: Same as above — O(log k) time and constant space.
+    - display: Time is O(n), because it visits every bucket and traverses its AVL tree. Space is O(1) during runtime, but total structure is still O(n).
+
+    main.cpp:
+    - loadBooks: Time is O(n log k), where n is books and k is bucket size, since each line read is inserted into the AVL tree. Space is O(n) for storing all entries.
+    - search: Time is O(log k), space is O(1).
+    - display: Time is O(n) total, and space is O(1) extra.
+    (since all functions r basically delegated to hash table methods,their time depends on the AVL trees inside)
